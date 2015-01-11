@@ -15,7 +15,7 @@ import httplib2
 app = Flask(__name__)
 app.debug = True
 
-DATABASE = r"C:\Users\osheen07\PycharmProjects\Meal_System_final\mealDatabase.db"
+DATABASE = r"C:\Users\bhoopesh\PycharmProjects\Meal_System_final\mealDatabase.db"
 username = ""
 user_type = ""
 
@@ -38,12 +38,12 @@ def init_db():
 
 def send_msg_to_user(msg):
 
-    account_sid = "AC306f34e3a74ac9c3f7516d8890bc9ffa"
-    auth_token = "bc864a743d93e7860f1ec09861ca6045"
+    account_sid = "your account sid"
+    auth_token = "your auth token"
 
     try:
         client = TwilioRestClient(account_sid, auth_token)
-        message = client.messages.create(to="+12404858913", from_="+12404282279",
+        message = client.messages.create(to="+<enter number here>", from_="+<enter number here>",
                                body=msg)
     except httplib2.ServerNotFoundError, mesg:
             print mesg
@@ -845,5 +845,5 @@ def update_cart():
 
 
 if __name__ == '__main__':
-    app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+    app.secret_key = 'Enter secret key here you got for twilio'
     app.run()
