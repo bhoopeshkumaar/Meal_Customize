@@ -15,7 +15,7 @@ import httplib2
 app = Flask(__name__)
 app.debug = True
 
-DATABASE = r"C:\Users\bhoopesh\PycharmProjects\Meal_System_final\mealDatabase.db"
+DATABASE = r"C:\PycharmProjects\Meal_System_final\mealDatabase.db"
 username = ""
 user_type = ""
 
@@ -845,5 +845,5 @@ def update_cart():
 
 
 if __name__ == '__main__':
-    app.secret_key = 'Enter secret key here you got for twilio'
+    app.secret_key = 'Enter secret key here'
     app.run()
