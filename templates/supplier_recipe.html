@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "header.html" %}
+{% block body %}
+<link rel="stylesheet" href="/static/css/table.css" type="text/css" media="screen">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+
+  <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script type="text/javascript">
+    var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    $(document).ready(function(){
+        $.ajax({
+            type: "GET",
+            url: $SCRIPT_ROOT + "/supplier_recipe_list/",
+            contentType: "application/json; charset=utf-8",
+            success: function(data) {
+                $('#supplier_recipe').html(data.result);
+            }
+        });
+    });
+
+var names=[];
+var info;
+
+$(document).ready(function(){
+    $('#text_area').hide();
+    loadDropDown()
+});
+
+ function loadDropDown(){
+             console.log("Into Load")
+             $.ajax({
+                type: "GET",
+                url: $SCRIPT_ROOT + "/supplier_recipe_add",
+                contentType: "application/json; charset=utf-8",
+                success: function(data) {
+                    console.log(data.names)
+                     var select = document.getElementsByTagName('select')[0];
+                     select.options.length = 0;
+                     var count = Object.keys(data.names).length
+                     console.log("Count :"+count);
+                     var json_x = data.names;
+                     console.log("key1 :" + json_x['key1'])
+                     for(var i=1; i <= count; i++) {
+                         select.options.add(new Option(json_x['key' + i], json_x['key' + i]))
+                     }
+                }
+             });
+        }
+function getById(id_name){
+        return document.getElementById(id_name).value;
+}
+function getByLabel(id) {
+    return $("#" + id).next("label").html();
+}
+function validateRecipe() {
+    var recipename = document.getElementById('rec_name');
+    if (recipename == "") {
+        alert("Recipe Name is compulsory!")
+        return false;
+    }
+}
+function validatePrice() {
+    var itemprice = getById('itemPrice');
+    if ( itemprice == "") {
+        alert("Item Price is compulsory!")
+        return false;
+    }
+}
+function handleButtonPress(){
+//var customer = getById('customerName');
+var recipename = document.getElementById('rec_name').value;
+    console.log(recipename)
+var itemprice = getById('itemPrice');
+console.log(recipename+" "+itemprice)
+addIntoDB(recipename,itemprice);
+}
+
+function showContents() {
+    var recipe_name = document.getElementById('rec_name').value;
+    console.log(recipe_name)
+    searchINDB(recipe_name);
+    $('#text_area').show();
+}
+function searchINDB(recipe_Name){
+    $.ajax({
+        type: "GET",
+        url : $SCRIPT_ROOT + "/fetch_data",
+        contentType: "application/json; charset=utf-8",
+        data : {
+            "recipename" : recipe_Name
+        },
+        success: function (data) {
+                $('#text_area').html(data.info)
+        }
+});
+}
+
+function addIntoDB(recipename, itemprice) {
+    console.log("Into AJAX")
+    $.ajax({
+        type: "GET",
+        url: $SCRIPT_ROOT + "/add_data",
+        contentType: "application/json; charset=utf-8",
+        data: {
+            "recipename": recipename,
+            "itemprice": itemprice
+        },
+        success: function (data) {
+           $('#add_result').html(data.result);
+            //alert((data.result));
+            location.reload();
+        }
+    });
+}
+
+
+</script>
+<style>
+    .css_textbox {
+        text-decoration-color: Black;
+        text-align: left;
+        width: 200px;
+        height: 20px;
+        border: solid 1px #000000;
+        padding: 2px;
+        border-radius: 5px;
+        font-size: 12px;
+        box-shadow: 0px 1px 2px 0px #9C9C9C;
+        background-color: #FFFFFF;
+        outline: none;
+        color: #474747;
+    }
+    .textarea1{
+        width: 200px;
+	    height: 100px;
+	    border: 1px solid #000000;
+	    padding: 5px;
+	    font-family: Times, sans-serif;
+        overflow: hidden;
+    }
+    .css_button {
+	-moz-box-shadow: 3px 4px 0px 0px #899599;
+	-webkit-box-shadow: 3px 4px 0px 0px #899599;
+	box-shadow: 3px 4px 0px 0px #899599;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #bab1ba));
+	background:-moz-linear-gradient(top, #ededed 5%, #bab1ba 100%);
+	background:-webkit-linear-gradient(top, #ededed 5%, #bab1ba 100%);
+	background:-o-linear-gradient(top, #ededed 5%, #bab1ba 100%);
+	background:-ms-linear-gradient(top, #ededed 5%, #bab1ba 100%);
+	background:linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#bab1ba',GradientType=0);
+	background-color:#ededed;
+	-moz-border-radius:15px;
+	-webkit-border-radius:15px;
+	border-radius:15px;
+	border:1px solid #d6bcd6;
+	display:inline-block;
+	cursor:pointer;
+	color:#000000;
+	font-family:arial;
+	font-size:17px;
+	padding:7px 25px;
+	text-decoration:none;
+}
+.css_button:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #bab1ba), color-stop(1, #ededed));
+	background:-moz-linear-gradient(top, #bab1ba 5%, #ededed 100%);
+	background:-webkit-linear-gradient(top, #bab1ba 5%, #ededed 100%);
+	background:-o-linear-gradient(top, #bab1ba 5%, #ededed 100%);
+	background:-ms-linear-gradient(top, #bab1ba 5%, #ededed 100%);
+	background:linear-gradient(to bottom, #bab1ba 5%, #ededed 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#bab1ba', endColorstr='#ededed',GradientType=0);
+	background-color:#bab1ba;
+}
+.css_button:active {
+	position:relative;
+	top:1px;}
+
+.add_result{
+    font-family: Times;
+    font-size: medium;
+    font-style: italic;
+    color: #98231a;
+}
+
+</style>
+
+<section id="content"><div class="ic">More Website Templates @ TemplateMonster.com. December03, 2012!</div>
+  <div class="border-horiz"></div>
+  <div class="container_12">
+
+
+
+
+<div class="box-contact">
+
+
+    <table>
+        <tr><td><h3><strong>ADD</strong> RECIPE</h3></td>
+        <td><h3><strong>YOUR</strong> RECIPES</h3></td>
+        </tr>
+        <tr>
+            <td>
+       <article class="side-bar extra1">
+
+<div style="text-align: center">
+    <!--<br><strong>Customer name:</strong></br>-->
+    <!--<br><input type="text" id="customerName" name="customerName" class="css_textbox" onblur="validateName()"></br>-->
+    <br><strong>Recipe Name:</strong></br>
+    <div class="css_dropdown">
+        <br><select id="rec_name">
+    </select></br>
+    </div>
+    <br><input type="button" id="submit_btn" value="Show the contents" onclick="showContents()" class="btn"></br>
+    <br><textarea size="30" readonly id="text_area" class="textarea1"></textarea></br>
+    <br><strong>Enter Price for the Dish:</strong></br>
+    <br><input type="text" id="itemPrice" value="" class="css_textbox" onblur="validatePrice()"></br>
+    <br><br><input type="button" id="submit" value="Submit your recipe" onclick="handleButtonPress()" class="btn">
+    <!--<br><br><br><div id="add_result" align ="center" class="add_result"></div></br></br></br>-->
+</div>
+
+    </article>        </td>
+       <td>
+           <br>
+    <fieldset>
+        <div id="supplier_recipe" class="table"></div>
+    </fieldset>
+            </td>
+        </tr>
+    </table>
+</div>
+    </article>
+</div>
+</section>
+<footer>
+  <div class="main">
+
+    <div class="policy">Website designed by <a href="http://www.templatemonster.com" rel="nofollow">Food Techies</a> </div>
+    <div class="clear"></div>
+  </div>
+</footer>
+{% endblock %}
+</html>

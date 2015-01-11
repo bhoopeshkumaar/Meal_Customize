@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Login</title>
+<meta charset="utf-8">
+<!--css-->
+<link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/static/css/grid.css" type="text/css" media="screen">
+<link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+<link href='http://fonts.googleapis.com/css?family=PT+Serif+Caption:400,400italic' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="/static/css/flexslider.css" type="text/css" media="screen">
+<!--js-->
+<script type="text/javascript" src="/static/js/jquery-1.7.1.min.js" ></script>
+<script type="text/javascript" src="/static/js/superfish.js"></script>
+<script type="text/javascript" src="/static/js/jquery.flexslider-min.js"></script>
+
+<!--[if lt IE 8]>
+<div style=' clear: both; text-align:center; position: relative;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+        <img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
+    </a>
+</div>
+<![endif]-->
+
+<!--[if lt IE 9]>
+<script src="/static/js/html5.js"></script>
+<link rel="stylesheet" href="/static/css/ie.css">
+<link href='http://fonts.googleapis.com/css?family=PT+Serif+Caption:400italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Serif+Caption:400' rel='stylesheet' type='text/css'>
+<![endif]-->
+<style>
+
+    .textbox {
+    background: #F1F1F1 url(http://html-generator.weebly.com/files/theme/input-text-40.png) no-repeat;
+    background-position: 5px -7px !important;
+    padding: 10px 10px 10px 25px;
+    width: 270px;
+    border: 1px solid #CCC;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0 1px 1px #ccc inset, 0 1px 0 #fff;
+    -webkit-box-shadow: 0 1px 1px #CCC inset, 0 1px 0 #FFF;
+    box-shadow: 0 1px 1px #CCC inset, 0 1px 0 #FFF;
+    }
+
+    .textbox:focus {
+    background-color: #FFF;
+    border-color: #E8C291;
+    outline: none;
+    -moz-box-shadow: 0 0 0 1px #e8c291 inset;
+    -webkit-box-shadow: 0 0 0 1px #E8C291 inset;
+    box-shadow: 0 0 0 1px #E8C291 inset;
+    }
+
+    textbox:-webkit-input-placeholder {
+    color: #b5b5b5;
+    }
+
+    textbox-moz-placeholder {
+    color: #b5b5b5;
+    }
+
+    select#type {
+    -webkit-appearance: button;
+    -webkit-border-radius: 2px;
+    -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    -webkit-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -webkit-user-select: none;
+    background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#fafafa, #f4f4f4 40%, #e5e5e5);
+    background-position: 97% center;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    color: #555;
+    font-size: inherit;
+    margin: 20px;
+    overflow: hidden;
+    padding: 5px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 300px;
+    margin-top:15px;
+    margin-left:0px;
+    }
+</style>
+
+<script type="text/javascript">
+    var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+
+    function getById(id_name){
+        return document.getElementById(id_name).value;
+    }
+
+    function validate_email(){
+        var email = getById('email');
+        console.log("" + email);
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        console.log(re.test(email));
+    }
+
+    function validate(){
+
+        display_in_div("is_valid_error", '');
+        var name = getById('name');
+        var email = getById('email');
+        var email_conf = getById('email_conf');
+        var password = getById('password');
+        var password_conf = getById('password_conf');
+        var address = getById('address');
+        var phone = getById('phone');
+        var type = getById('type');
+        is_empty = check_is_empty(name,email,email_conf,password, password_conf, address, phone);
+        is_valid = check_is_valid(name,email,email_conf,password, password_conf, phone, type);
+
+        if(is_empty != ''){
+            display_in_div("is_valid_error", 'One or more fields empty.');
+            return;
+        }
+
+        console.log("is_empty :" + is_empty + " is_valid: " + is_valid);
+        if(is_empty == '' && is_valid == ''){
+             $.ajax({
+                type: "GET",
+                url: $SCRIPT_ROOT + "/save_register_db/",
+                contentType: "application/json; charset=utf-8",
+                data: { 'name' : name,
+                    'email' : email,
+                    'password' : password,
+                    'address' : address,
+                    'phone': phone,
+                    'type' : type
+                    },
+                success: function(data) {
+                    if(data.result == 'Success'){
+                        window.location.href = {{ url_for('login_success_page')}};
+                    }
+                    else{
+                        display_in_div("is_valid_error", data.result);
+                    }
+                }
+             });
+        }
+        else{
+            console.log("in else");
+            display_in_div("is_valid_error",is_valid);
+        }
+      }
+
+    function display_in_div(divId, displayValue){
+         $("#"+divId).html();
+         $("#"+divId).html(displayValue);
+    }
+    function check_is_valid(name, email, email_conf, password, password_conf, phone, type){
+        var is_valid_str="";
+        if(email != email_conf){
+            is_valid_str+="Email Addresses doesn't match. Please try again."+"\n"
+        }
+        else{
+            var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if(!re.test(email)){
+                is_valid_str+="Invalid email Id entered." +"\n";
+            }
+        }
+        if(password != password_conf){
+            is_valid_str+="Passwords doesn't match. Please try again."+"\n"
+        }
+        else{
+            //TODO password validation
+        }
+
+        var phone_regex = /^\d{10}$/;
+        if(!phone.match(phone_regex)){
+            is_valid_str+="Invalid contact number format."+"\n";
+        }
+
+        if(type == 'Select User Type'){
+            is_valid_str+= "Invalid User Type\n";
+        }
+
+        return is_valid_str;
+    }
+
+    function check_is_empty(username,email,email_conf,password, password_conf, address, phone){
+        console.log("Into check is empty");
+
+        is_empty_str = is_empty1(username, "Name");
+
+        is_empty_str+= is_empty1(email, "Email");
+
+        is_empty_str+= is_empty1(email_conf, "Confirm Email");
+
+        is_empty_str+= is_empty1(password, "Password");
+
+        is_empty_str+= is_empty1(password_conf, "Confirm Password");
+
+        is_empty_str+= is_empty1(address, "Address");
+
+        is_empty_str+= is_empty1(phone, "Phone");
+
+        return is_empty_str;
+
+      }
+
+      function is_empty1(value, fieldName){
+        if(value == null || value == ''){
+            return fieldName + " is empty." + "\n"
+        }
+        return  "";
+      }
+
+
+	</script>
+
+
+<!--[if lt IE 8]>
+<div style=' clear: both; text-align:center; position: relative;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+        <img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
+    </a>
+</div>
+<![endif]-->
+
+<!--[if lt IE 9]>
+<script src="/static/js/html5.js"></script>
+<link rel="stylesheet" href="/static/css/ie.css">
+<link href='http://fonts.googleapis.com/css?family=PT+Serif+Caption:400italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Serif+Caption:400' rel='stylesheet' type='text/css'>
+<![endif]-->
+
+</head>
+<body>
+<div class="box-contact">
+    <br>
+    <h1><a href="{{url_for('home')}}"><img alt="" src="/static/images/logo.png"height="80" width="250"></a></h1><br><br> <br>
+
+    <h3><strong>CREATE</strong> Account</h3>
+    <h2><font color='red'><div id="is_valid_error"></div></font></h2>
+    <fieldset>
+        <div class="coll-1">
+            <div class="form-txt">Name:</div><input type="text" id="name" class="textbox" placeholder="Enter your name">
+            <div class="form-txt">Address:</div><input type="text" id="address" class="textbox" placeholder="Enter your full address">
+            <div class="form-txt">Contact:</div><input type="text" id="phone" maxlength="10" class="textbox" placeholder="Enter a 10 digit contact number"><br><br>
+            <div class="form-txt">Login as:</div>
+            <select id="type">
+                    <option value="customer">Select User Type</option>
+                    <option value="customer">Customer</option>
+                    <option value="supplier">Supplier</option>
+            </select>
+        </div>
+        <div class="coll-2">
+            <div class="form-txt">Email Id:</div><input type="text" id="email" class="textbox" placeholder="Enter your Email Id">
+            <div class="form-txt">Confirm Email:</div><input type="text" id="email_conf"  class="textbox" placeholder="Retype your email id">
+            <div class="form-txt">Password:</div><input type="password" id="password" class="textbox" placeholder="Enter a Password">
+            <div class="form-txt">Confirm Password:</div><input type="password" id="password_conf" class="textbox" placeholder="Retype password">
+
+            <br><br>
+            <input type="button" value="Create Account" class = "btn" onclick="validate();"/>
+        </div>
+    </fieldset>
+</div>
+
+</body>
+</html>

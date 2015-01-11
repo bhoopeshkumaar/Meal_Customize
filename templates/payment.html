@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "header.html" %}
+{% block body %}
+<style>
+    .textbox {
+    background: #F1F1F1 url(http://html-generator.weebly.com/files/theme/input-text-40.png) no-repeat;
+    background-position: 5px -7px !important;
+    padding: 10px 10px 10px 25px;
+    width: 270px;
+    border: 1px solid #CCC;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0 1px 1px #ccc inset, 0 1px 0 #fff;
+    -webkit-box-shadow: 0 1px 1px #CCC inset, 0 1px 0 #FFF;
+    box-shadow: 0 1px 1px #CCC inset, 0 1px 0 #FFF;
+    }
+
+    .textbox:focus {
+    background-color: #FFF;
+    border-color: #E8C291;
+    outline: none;
+    -moz-box-shadow: 0 0 0 1px #e8c291 inset;
+    -webkit-box-shadow: 0 0 0 1px #E8C291 inset;
+    box-shadow: 0 0 0 1px #E8C291 inset;
+    }
+
+    textbox:-webkit-input-placeholder {
+    color: #b5b5b5;
+    }
+
+    textbox-moz-placeholder {
+    color: #b5b5b5;
+    }
+
+    select#type {
+    -webkit-appearance: button;
+    -webkit-border-radius: 2px;
+    -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    -webkit-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -webkit-user-select: none;
+    background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#fafafa, #f4f4f4 40%, #e5e5e5);
+    background-position: 97% center;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    color: #555;
+    font-size: inherit;
+    margin: 20px;
+    overflow: hidden;
+    padding: 5px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 300px;
+    margin-top:15px;
+    margin-left:0px;
+    }
+</style>
+<script type="text/javascript">
+    var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+    function check_is_empty(card_num, expiry, cvv, name){
+
+        is_empty_str = is_empty1(card_num, "Card Number");
+
+        is_empty_str+= is_empty1(expiry, "Expiry");
+
+        is_empty_str+= is_empty1(cvv, "CVV");
+
+        is_empty_str+= is_empty1(name, "Name");
+
+        return is_empty_str;
+
+      }
+
+    function is_empty1(value, fieldName){
+        if(value == null || value == ''){
+            return fieldName + " is empty." + "\n"
+        }
+        return  "";
+      }
+
+    function display_in_div(divId, displayValue){
+         $("#"+divId).html();
+         $("#"+divId).html(displayValue);
+    }
+
+    function validate(){
+
+        var card_type = getById('type');
+        var check = getById('checkbox');
+        var card_num = getById('card');
+        var expiry = getById('expiry');
+        var cvv = getById('cvv');
+        var name = getById('name');
+
+        var error_msg = check_is_empty(card_num, expiry, cvv, name);
+        
+        if(error_msg != '') {
+            display_in_div("is_valid_error", error_msg);
+            return;
+        }
+
+        var is_check = "false";
+        if($("#checkbox").is(':checked')){
+            is_check = "true";
+        }
+        $.ajax({
+            type: "GET",
+            url: $SCRIPT_ROOT + "/payment_details/",
+            contentType: "application/json; charset=utf-8",
+            data: {
+                "is_check" : is_check,
+                "card_type" : card_type,
+                "card_num" : card_num,
+                "expiry" : expiry,
+                "cvv" : cvv,
+                "name" : name
+            },
+            success: function(data) {
+                window.location.href = "{{url_for('track_order')}}";
+            }
+        });
+    }
+
+    function getById(id_name){
+        return document.getElementById(id_name).value;
+    }
+</script>
+<div>
+
+    <div class="box-contact">
+        <h3><strong>PAYMENT</strong> DETAILS</h3>
+        <h4><div id="total">TOTAL AMOUNT: ${{ total }}</div></h4>
+        <h2><font color='red'><div id="is_valid_error"></div></font></h2>
+        <fieldset>
+            <div class="coll-1">
+                <select id="type">
+                    <option value="debit">Select Payment Type</option>
+                    <option value="credit">Credit Card</option>
+                    <option value="debit">Debit card</option>
+                </select><br>
+                <div class="form-txt">Card Number:</div>
+                <input type="text" id="card" class="textbox" placeholder="Card Number" value="{{cardnum}}">
+                <div class="form-txt">Card Expiry Date:</div>
+                <input type="text" id="expiry" class="textbox" placeholder="MM/YY" value="{{expiry}}">
+            </div>
+            <div class="coll-2">
+                <div class="form-txt">CVV Number:</div>
+                <input type="password" id="cvv" class="textbox" placeholder="CVV" value="{{cvv}}">
+                <div class="form-txt">Full Name on Card:</div>
+                <input type="text" id="name"  class="textbox" placeholder="Name on Card" value="{{fullname}}">
+                <div class="form-txt"></div>
+                <input id="checkbox" type="checkbox" name="is_save" value="">Save Card Details
+                <div class="form-txt"></div>
+                <input type="button" class="btn" value="Pay" onclick="validate();">
+            </div>
+        </fieldset>
+    </div>
+
+</div>
+<div id="payment_details"></div>
+<footer>
+  <div class="main">
+
+    <div class="policy">Website designed by <a href="http://www.templatemonster.com" rel="nofollow">Food Techies</a> </div>
+    <div class="clear"></div>
+  </div>
+</footer>
+{% endblock %}
+</html>

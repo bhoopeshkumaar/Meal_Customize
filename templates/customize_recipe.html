@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+{% extends "header.html" %}
+
+
+{% block body %}
+<script type="text/javascript">
+    function add_to_cart(username, price, recipe_id){
+        alert("Username :" + username + " price: " + price + " Recipe Id :" + recipe_id );
+        /*var sup_status = document.getElementById("status"+count).value;
+        $.ajax({
+            type: "GET",
+            url: $SCRIPT_ROOT + "/update_status/",
+            contentType: "application/json; charset=utf-8",
+            data : {
+                    "order_id" : order_id,
+                    "customer_id" : customer_id,
+                    "recipe_id" : recipe_id,
+                    "supplier_id" : supplier_id,
+                    "sup_status" : sup_status
+                    },
+            success: function(data) {
+                if(data.result == 'Success'){
+                    $('#sup_status'+count).html(sup_status);
+                }
+            }
+        });*/
+    }
+</script>
+
+<style>
+    #desc {
+        border: 1px solid black;
+    }
+</style>
+<!--==============================content=================================-->
+<section id="content">
+  <div class="border-horiz"></div>
+  <div class="container_12">
+       <article class="side-bar extra1">
+      <h3><span>Customize</span>yoUR Meal</h3>
+      <figure class="box-img img-indent1"><img src="static/images/page5-img1.jpg " alt="" /></figure>
+      <div class="inner-1"> <a href="#" class="link-1">Make You Own Meal by selecting the list of Food Ingredients.</a>
+        <p>Get the best Recipe match suiting your taste, and order the available ones provided by our suppliers </p>
+        <a href="#" class="btn">Read more</a> </div>
+    </article>
+    <article class="grid_8">
+      {% for recipe in recipe_details %}
+        <h3>{{ recipe[1] }}</h3>
+
+      <figure class="box-img"><img src="static/images/{{ recipe[4] }} " alt="" width="600" height="360" /></figure> </br> </br>
+       <h6>Recipe Details</h6>
+       <div id="desc">
+        {% for row in desc_lines %}
+           <p><div class="inner-1"> <a href="#" class="link-1">{{ row }}</a>
+               </div></p>
+           {% endfor %}
+        <div>
+      {% endfor %}
+    </article>
+    <div class="clear">
+
+    </div>
+
+  </div>
+</section>
+
+<!--==============================footer=================================-->
+<footer>
+  <div class="main">
+
+    <div class="policy">Website designed by <a href="http://www.templatemonster.com" rel="nofollow">Food Techies</a> </div>
+    <div class="clear"></div>
+  </div>
+</footer>
+
+{% endblock %}
+
+</html>

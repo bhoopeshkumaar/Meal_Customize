@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "header.html" %}
+{% block body %}
+<link rel="stylesheet" href="/static/css/table.css" type="text/css" media="screen">
+<script type="text/javascript">
+    var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    $(document).ready(function(){
+        $.ajax({
+            type: "GET",
+            url: $SCRIPT_ROOT + "/order_history_details/",
+            contentType: "application/json; charset=utf-8",
+            success: function(data) {
+                $('#order_details').html(data.result);
+            }
+        });
+    });
+</script>
+
+<div class="box-contact">
+    <h3>ORDER HISTORY</h3>
+    <fieldset>
+        <div id="order_details" class="table"></div>
+    </fieldset>
+</div>
+<footer>
+  <div class="main">
+
+    <div class="policy">Website designed by <a href="http://www.templatemonster.com" rel="nofollow">Food Techies</a> </div>
+    <div class="clear"></div>
+  </div>
+</footer>
+{% endblock %}
+</html>

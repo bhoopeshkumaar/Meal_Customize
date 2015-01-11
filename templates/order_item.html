@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+{% extends "header.html" %}
+
+
+{% block body %}
+<script type="text/javascript">
+
+    var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+    function getById(id_name){
+        return document.getElementById(id_name).value;
+    }
+
+    function add_to_cart(username, price, recipe_id, supplier_name){
+
+       $('#result').html('');
+       var quantity = getById('quantity');
+
+        if(quantity == ''){
+            $('#result').html('Please enter the quantity.');
+            return;
+        }
+
+        is_check = "One time Order";
+
+        if($("#week").is(':checked')){
+            is_check = "Weekly Subscription";
+        }
+
+//        alert("Quantity : " + quantity + "is Check :" + is_check + "Username :" + username + " price: " + price + " Recipe Id :" + recipe_id );
+        price *= quantity;
+        if(is_check == 'Weekly Subscription'){
+            price *=7;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: $SCRIPT_ROOT + "/add_to_cart/",
+            contentType: "application/json; charset=utf-8",
+            data : {
+                    "is_check": is_check,
+                    "price" : price,
+                    "recipe_id" : recipe_id,
+                    "quantity" : quantity,
+                    "supplier" : supplier_name
+                    },
+            success: function(data) {
+                    $('#result').html(data.result);
+            }
+        });
+    }
+</script>
+<!--==============================content=================================-->
+<section id="content">
+  <div class="border-horiz"></div>
+  <div class="container_12">
+    <article class="side-bar extra">
+      <h3><strong>3</strong> Easy Steps <em>To order<br>
+        your favorite meal</em> </h3>
+      <ul class="list-dropcap1">
+        <li>
+          <div class="wrapper">
+            <div class="dropcap">1</div>
+            <h4> Select <br>
+              Meal</h4>
+          </div>
+          <p>You can choose your favorite meal from our wide range of suppliers</p>
+           </li>
+        <li>
+          <div class="wrapper">
+            <div class="dropcap">2</div>
+            <h4>Order <br>
+              Option</h4>
+          </div>
+          <p>You can choose either to order one time or subscribe the meal weekly at your doorsteps</p>
+           </li>
+        <li>
+          <div class="wrapper">
+            <div class="dropcap">3</div>
+            <h4>Add to <br>
+              Cart</h4>
+          </div>
+          <p>Pay at one go by adding all your favorite meal in your shopping cart</p>
+             </li>
+      </ul>
+    </article>
+    <article class="grid_8">
+      {% for content in item_content %}
+        <h3>{{ content[2] }}</h3>
+       <p>You can choose delicious meals from our top suppliers. There wider range of options like one time deliver option or you can choose our weekly subscribe option</p>
+
+      <figure class="box-img"><img src="static/images/{{ content[4] }} " alt="" width="560" height="360" /></figure> </br> </br>
+      <table>
+          <tr>
+              <td>
+                  <td>
+                  <h4>Order Type: </h4> <br>
+                  <input id='one' type="radio" name="order_type" checked="true" value="One time order"> One time Order <br>
+                  <input id='week' type="radio" name="order_type" value="Weekly subscription"> Subscribe weekly <br>
+                  <h4>Quantity:</h4>
+                  <input type="text"  id="quantity" value="" placeholder="Enter quantity">
+                  <br>
+                <br>
+                  <input type="button" class="btn" value="Add to cart" onClick="add_to_cart('{{username}}',{{content[1]}},{{content[5]}}, '{{content[0]}}')">
+                  <br>
+                  <div id="result"></div>
+              </td>
+              </td>
+              <td>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </td>
+              <td>
+              <h4><b>Price: ${{ content[1] }}</b></h4><br>
+              <h4>{{ content[3] }}</h4><br>
+              <h4>Supplier: {{ content[0] }}</h4>
+              </td>
+          </tr>
+      </table>
+
+
+      {% endfor %}
+
+
+    </article>
+    <div class="clear">
+
+    </div>
+
+  </div>
+</section>
+
+<!--==============================footer=================================-->
+<footer>
+  <div class="main">
+
+    <div class="policy">Website designed by <a href="http://www.templatemonster.com" rel="nofollow">Food Techies</a> </div>
+    <div class="clear"></div>
+  </div>
+</footer>
+
+{% endblock %}
+
+</html>

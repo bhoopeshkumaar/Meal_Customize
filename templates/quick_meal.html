@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<title>quick meal</title>
+{% extends "header.html" %}
+
+
+{% block body %}
+
+
+<!--==============================content=================================-->
+<section id="content"><div class="ic"></div>
+  <div class="border-horiz"></div>
+  <div class="container_12">
+    <article class="side-bar">
+      <h3><span>Select your</span> Meal</h3>
+      <p>Select your favorite meals from a wide range of suppliers and we will make sure the food gets delivered to your door steps in no time.</p>
+       <form action="/quickmeal" method="post">
+        <ul class="list-1">
+        <li><input type="checkbox" name="mealtype" value="Non-Vegetarian"><a>Non-Veg</a></li>
+        <li><input type="checkbox" name="mealtype" value="Vegetarian"><a>Veg</a></br></li>
+        <li><a href="#">Suppliers</a>
+            <div class="container">
+            {% for supplier in supplier_list %}
+            <input type="checkbox" name="suppliers" value="{{ supplier[0] }}" /> {{ supplier[0] }} <br />
+            {% endfor %}
+            </div>
+
+        </li>
+        <li><a href="/quickmeal">(X)Clear</a> </li>
+
+
+      </ul>
+
+      &nbsp;&nbsp;&nbsp;&nbsp;<input class="btn" type="submit" value="Filter">
+
+      </form>
+
+
+
+
+<style>
+table,td, tr {
+    border: 1px solid black;
+
+}
+
+#nav {
+    line-height:30px;
+    height:50px;
+
+}
+
+#b {
+    display: none;
+}
+#chkdel
+{
+    display: none;
+}
+#content:hover~#b{
+    display: block;
+}
+
+.container { border:2px solid #ccc; width:200px; height: 100px; overflow-y: scroll }
+
+
+.button {
+   border-top: 1px solid #0d0c0c;
+   background: #e61022;
+   background: -webkit-gradient(linear, left top, left bottom, from(#f0082e), to(#e61022));
+   background: -webkit-linear-gradient(top, #f0082e, #e61022);
+   background: -moz-linear-gradient(top, #f0082e, #e61022);
+   background: -ms-linear-gradient(top, #f0082e, #e61022);
+   background: -o-linear-gradient(top, #f0082e, #e61022);
+   padding: 5px 10px;
+   -webkit-border-radius: 8px;
+   -moz-border-radius: 8px;
+   border-radius: 8px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 14px;
+   font-family: Georgia, serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+.button:hover {
+   border-top-color: #e8e8e8;
+   background: #e8e8e8;
+   color: #ed131e;
+   }
+.button:active {
+   border-top-color: #fc0004;
+   background: #fc0004;
+   }
+
+
+</style>
+    </article>
+    <article class="grid_8">
+    <div>
+        <h3>MEAL LIST</h3>
+        <table >
+
+                  <tr>
+            </tr>
+
+        </table>
+                <table>
+
+                    <tr>
+                    {% set i=0 %}
+
+                    {% for row in grid %}
+                    {% if i%3==0 %}
+                    </tr>
+                    <tr>
+                    {% endif %}
+                      <td>
+                           <a href="/itemdetails?item_id={{ row[4] }}&&supp_id={{ row[5] }}"><img src="static/images/{{ row[2] }} " alt="" width="250" height="150" /></a></figure>
+                          </br>
+                          <div id = "nav"> <label><a href="/itemdetails?item_id={{ row[4] }}&&supp_id={{ row[5] }}"> <h4>  {{ row[1] }} </h4> </a> </label> </div>
+                            price: ${{ row[3] }}
+                            </br>
+                            Supplier: {{ row[0] }}
+                            </br>
+                            <a href="/itemdetails?item_id={{ row[4] }}&&supp_id={{ row[5] }}" class="btn">Order Now</a>
+
+                      </td>
+
+
+                    {% set i=i+1 %}
+                    {% endfor %}
+
+                    </tr>
+
+
+        </table>
+    </div>
+
+
+
+
+
+
+    </article>
+    <div class="clear"></div>
+  </div>
+</section>
+
+<!--==============================footer=================================-->
+<footer>
+  <div class="main">
+
+    <div class="policy">Website designed by <a href="http://www.templatemonster.com" rel="nofollow">Food Techies</a> </div>
+    <div class="clear"></div>
+  </div>
+</footer>
+{% endblock %}
+
+
+</html>

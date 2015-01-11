@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "header.html" %}
+{% block body %}
+<link rel="stylesheet" href="/static/css/table.css" type="text/css" media="screen">
+<style>
+    .textbx {
+        height: 20px;
+        width: 30px;
+    }
+</style>
+<script type="text/javascript">
+    var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    $(document).ready(function(){
+        $.ajax({
+            type: "GET",
+            url: $SCRIPT_ROOT + /cart_details/,
+            contentType: "application/json; charset=utf-8",
+            success: function(data) {
+                $('#order_details').html(data.result);
+                $('#total').html("TOTAL COST: $"+data.total);
+                if(data.total == '0'){
+                    $('#payment_button').hide();
+                }
+            }
+        });
+    });
+
+    function update(count, customer_id, recipe_id, order_id, supplier_id){
+        //alert("Order Id :" + order_id + " Customer Id:" + customer_id + " Recipe Id :" + recipe_id  + "Count :" + count + "Sup id :" +supplier_id + "Order_type :" + order_type);
+        var quantity = document.getElementById("quantity"+count).value;
+        $.ajax({
+            type: "GET",
+            url: $SCRIPT_ROOT + "/update_cart/",
+            contentType: "application/json; charset=utf-8",
+            data : {
+                    "order_id" : order_id,
+                    "customer_id" : customer_id,
+                    "recipe_id" : recipe_id,
+                    "quantity": quantity,
+                    "supplier_id" : supplier_id
+                    },
+            success: function(data) {
+                 $('#price'+count).html("$"+data.price);
+                 $('#total').html("TOTAL COST: $"+data.total);
+
+            }
+        });
+    }
+
+    function deleteFromCart(customer_id, recipe_id, order_id){
+        //alert("Order Id :" + order_id + " Customer Id:" + customer_id + " Recipe Id :" + recipe_id  + "Count :" + count + "Sup id :" +supplier_id + "Order_type :" + order_type);
+        console.log('Into delete');
+        $.ajax({
+            type: "GET",
+            url: $SCRIPT_ROOT + "/cart_details/",
+            contentType: "application/json; charset=utf-8",
+            data : {
+                    "order_id" : order_id,
+                    "customer_id" : customer_id,
+                    "recipe_id" : recipe_id,
+                    "to_delete": "yes"
+                    },
+            success: function(data) {
+                 $('#total').html("TOTAL COST: $"+data.total);
+                 $('#order_details').html(data.result);
+
+                if(data.total == '0'){
+                    $('#payment_button').hide();
+                }
+
+            }
+        });
+    }
+
+</script>
+<style>
+</style>
+<div class="box-contact">
+    <h3>YOUR CART</h3>
+    <div id="payment_button" align ="right"><a href="{{url_for('payment')}}"><input type="button" class="btn" value="Proceed to Payment"></a></div>
+    <h4><div id="total"></div></h4>
+    <fieldset>
+        <div id="order_details" class="table"></div>
+    </fieldset>
+</div>
+<footer>
+  <div class="main">
+
+    <div class="policy">Website designed by <a href="http://www.templatemonster.com" rel="nofollow">Food Techies</a> </div>
+    <div class="clear"></div>
+  </div>
+</footer>
+{% endblock %}
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <meta charset="utf-8">
+    <!--css-->
+    <link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="/static/css/grid.css" type="text/css" media="screen">
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+    <link href='http://fonts.googleapis.com/css?family=PT+Serif+Caption:400,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/static/css/flexslider.css" type="text/css" media="screen">
+    <!--js-->
+    <script type="text/javascript" src="/static/js/jquery-1.7.1.min.js" ></script>
+    <script type="text/javascript" src="/static/js/superfish.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.flexslider-min.js"></script>
+
+    <!--[if lt IE 8]>
+    <div style=' clear: both; text-align:center; position: relative;'>
+        <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+            <img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
+        </a>
+    </div>
+    <![endif]-->
+
+    <!--[if lt IE 9]>
+    <script src="/static/js/html5.js"></script>
+    <link rel="stylesheet" href="/static/css/ie.css">
+    <link href='http://fonts.googleapis.com/css?family=PT+Serif+Caption:400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=PT+Serif+Caption:400' rel='stylesheet' type='text/css'>
+    <![endif]-->
+    <style>
+
+        .textbox {
+        background: #F1F1F1 url(http://html-generator.weebly.com/files/theme/input-text-40.png) no-repeat;
+        background-position: 5px -7px !important;
+        padding: 10px 10px 10px 25px;
+        width: 270px;
+        border: 1px solid #CCC;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        -moz-box-shadow: 0 1px 1px #ccc inset, 0 1px 0 #fff;
+        -webkit-box-shadow: 0 1px 1px #CCC inset, 0 1px 0 #FFF;
+        box-shadow: 0 1px 1px #CCC inset, 0 1px 0 #FFF;
+        }
+
+        .textbox:focus {
+        background-color: #FFF;
+        border-color: #E8C291;
+        outline: none;
+        -moz-box-shadow: 0 0 0 1px #e8c291 inset;
+        -webkit-box-shadow: 0 0 0 1px #E8C291 inset;
+        box-shadow: 0 0 0 1px #E8C291 inset;
+        }
+
+        textbox:-webkit-input-placeholder {
+        color: #b5b5b5;
+        }
+
+        textbox-moz-placeholder {
+        color: #b5b5b5;
+        }
+
+        .box-contact{
+        background:#fff;
+        width:340px;
+        margin:60px auto 0;
+        padding:0 40px 51px;
+        background:#fff;
+        border-radius:18px;
+        -moz-border-radius:18px;
+        -webkit-border-radius:18px;
+        box-shadow:0 0 3px #c5c2a9;
+        -moz-box-shadow: 0 0 3px #c5c2a9;
+        -webkit-box-shadow:0 0 3px #c5c2a9;
+        }
+
+        a {
+        color:#193dee;
+        text-decoration:none;
+        }
+
+    </style>
+    <script type="text/javascript">
+    var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+    function getById(id_name){
+        return document.getElementById(id_name).value;
+    }
+
+    function setCharAt(str,index,chr) {
+        if(index > str.length-1)
+            return str;
+        return str.substr(0,index) + chr + str.substr(index+1);
+    }
+
+    function encrypt_password(password){
+        len = password.length;
+        temp = password.charAt(0);
+        password = setCharAt(password,0,password.charAt(len-1));
+        password = setCharAt(password, len-1, temp);
+        return password;
+    }
+
+    function validate(){
+
+        $('#result_table').html('');
+        var email = getById('email');
+        var password = getById('password');
+
+        if(email == '' && password == ''){
+             $('#result_table').html('Both Fields are empty');
+             return;
+        }
+
+        if(email == '' && password != ''){
+             $('#result_table').html('Email Field is empty');
+             return;
+        }
+
+        if(email != '' && password == ''){
+             $('#result_table').html('Password Field is empty');
+             return;
+        }
+
+
+        //password = encrypt_password(password);
+
+        console.log("Email : " + email + " Password:" + password);
+
+        $.ajax({
+            type: "GET",
+            url: $SCRIPT_ROOT + "/validate/",
+            contentType: "application/json; charset=utf-8",
+            data: {'email' : email,
+                    'password' : password
+                    },
+            success: function(data) {
+                if(data.result == 'Success'){
+                    window.location.href = "{{url_for('login_success_page')}}";
+                }
+                else{
+                    $('#result_table').html(data.result);
+                }
+            }
+        });
+
+      }
+	</script>
+</head>
+<body>
+
+<div class="box-contact">
+    <br>
+    <h1><a href="{{url_for('home')}}"><img alt="" src="/static/images/logo.png"height="80" width="250"></a></h1><br><br> <br>
+
+    <h3><strong>Sign</strong> In</h3>
+    <h2><font color='red'><div id="result_table"></div></font></h2>
+    <fieldset>
+        <div class="coll-1">
+            <div class="form-txt">EMAIL:</div>
+            <input type="text" class="textbox" id="email" placeholder="Enter your email id"><br>
+            <div class="form-txt"></div><br>
+            <div class="form-txt">Password:</div>
+            <input type="password" class="textbox" id="password" placeholder="Enter your password"><br>
+            <div class="form-txt"></div><br>
+            <input type="button" class = "btn" value="Sign In" onclick="validate();">
+            &nbsp;&nbsp;<a href="{{url_for('register')}}">New User? Register Now<br></a>
+        </div>
+        <!--<div class="coll-2">
+
+        </div>-->
+    </fieldset>
+</div>
+</body>
+</html>

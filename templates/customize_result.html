@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+{% extends "header.html" %}
+{% block body %}
+<style type="text/css">
+input[type=checkbox].css-checkbox {
+							position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
+						}
+
+						input[type=checkbox].css-checkbox + label.css-label {
+							padding-left:55px;
+							height:50px;
+							display:inline-block;
+							line-height:50px;
+							background-repeat:no-repeat;
+							background-position: 0 0;
+							font-size:15px;
+							vertical-align:middle;
+							cursor:pointer;
+
+						}
+
+						input[type=checkbox].css-checkbox:checked + label.css-label {
+							background-position: 0 -50px;
+						}
+						label.css-label {
+				background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_05da93f5fd929c07147ea1f5093f38af.png);
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+			}
+
+.button {
+   border-top: 1px solid #0d0c0c;
+   background: #e61022;
+   background: -webkit-gradient(linear, left top, left bottom, from(#f0082e), to(#e61022));
+   background: -webkit-linear-gradient(top, #f0082e, #e61022);
+   background: -moz-linear-gradient(top, #f0082e, #e61022);
+   background: -ms-linear-gradient(top, #f0082e, #e61022);
+   background: -o-linear-gradient(top, #f0082e, #e61022);
+   padding: 5px 10px;
+   -webkit-border-radius: 8px;
+   -moz-border-radius: 8px;
+   border-radius: 8px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 14px;
+   font-family: Georgia, serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+.button:hover {
+   border-top-color: #e8e8e8;
+   background: #e8e8e8;
+   color: #ed131e;
+   }
+.button:active {
+   border-top-color: #fc0004;
+   background: #fc0004;
+   }
+#nav {
+    line-height:30px;
+    height:50px;
+
+}
+table,td, tr {
+    border: 1px solid black;
+
+}
+
+</style>
+
+<section id="content"><div class="ic">More Website Templates @ TemplateMonster.com. December03, 2012!</div>
+  <div class="border-horiz"></div>
+  <div class="container_12">
+    <article class="side-bar extra1">
+      <h3><span>Customize</span>yoUR Meal</h3>
+      <figure class="box-img img-indent1"><img src="static/images/page5-img1.jpg " alt="" /></figure>
+      <div class="inner-1"> <a href="#" class="link-1">Make You Own Meal by selecting the list of Food Ingredients.</a>
+        <p>Get the best Recipe match suiting your taste, and order the available ones provided by our suppliers </p>
+        <a href="#" class="btn">Read more</a> </div>
+    </article>
+    <article class="grid_8">
+
+      <h3>Top Results</h3>
+
+
+                <table>
+
+                    <tr>
+                    {% set i=0 %}
+
+                    {% for row in top_results %}
+                    {% if i%3==0 %}
+                    </tr>
+                    <tr>
+                    {% endif %}
+                      <td>
+                           <img src="static/images/{{ row[1] }} " alt="" width="250" height="150" /></a></figure>
+                          </br>
+                          <div id = "nav"> <label> <h4>  {{ row[0] }} </h4> </label> </div>
+                        <br>
+                            <a href="/recipe?r_id={{ row[2] }}" class="btn">Check Recipe</a>
+
+                      </td>
+
+
+
+                    {% set i=i+1 %}
+                    {% endfor %}
+
+                    </tr>
+
+
+
+                </table>
+        {% if show_grid %}
+      <h3>By our Suppliers</h3>
+        {% endif %}
+<table>
+
+                    <tr>
+                    {% set i=0 %}
+
+                    {% for row in show_grid %}
+                    {% if i%3==0 %}
+                    </tr>
+                    <tr>
+                    {% endif %}
+                      <td>
+                           <a href="/itemdetails?item_id={{ row[4] }}&&supp_id={{ row[5] }}"><img src="static/images/{{ row[2] }} " alt="" width="250" height="150" /></a></figure>
+                          </br>
+                          <div id = "nav"> <label><a href="/itemdetails?item_id={{ row[4] }}&&supp_id={{ row[5] }}"> <h4>  {{ row[1] }} </h4> </a> </label> </div>
+                            price: ${{ row[3] }}
+                            </br>
+                            Supplier: {{ row[0] }}
+                            </br>
+                            <a href="/itemdetails?item_id={{ row[4] }}&&supp_id={{ row[5] }}" class="btn">Order Now</a>
+
+                      </td>
+
+
+                    {% set i=i+1 %}
+                    {% endfor %}
+
+                    </tr>
+
+
+        </table>
+
+
+    </article>
+    <div class="clear"></div>
+  </div>
+</section>
+
+
+<footer>
+  <div class="main">
+
+    <div class="policy">Website designed by <a href="http://www.templatemonster.com" rel="nofollow">Food Techies</a> </div>
+    <div class="clear"></div>
+  </div>
+</footer>
+{% endblock %}
+
+
+
+
+</html>

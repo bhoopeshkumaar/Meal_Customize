@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "header.html" %}
+{% block body %}
+<style>
+    .table {
+	margin:0px;
+    padding:0px;
+	width:100%;
+    box-shadow: 5px 5px 5px 0px #CCCCCC;
+	border:1px solid #0D0101;
+
+	-moz-border-radius-bottomleft:7px;
+	-webkit-border-bottom-left-radius:7px;
+	border-bottom-left-radius:7px;
+
+	-moz-border-radius-bottomright:7px;
+	-webkit-border-bottom-right-radius:7px;
+	border-bottom-right-radius:7px;
+
+	-moz-border-radius-topright:7px;
+	-webkit-border-top-right-radius:7px;
+	border-top-right-radius:7px;
+
+	-moz-border-radius-topleft:7px;
+	-webkit-border-top-left-radius:7px;
+	border-top-left-radius:7px;
+}
+.table table{
+	width:100%;
+	height:100%;
+	margin:0px;padding:0px;
+}
+.table tr:last-child td:last-child {
+	-moz-border-radius-bottomright:7px;
+	-webkit-border-bottom-right-radius:7px;
+	border-bottom-right-radius:7px;
+}
+.table table tr:first-child td:first-child {
+	-moz-border-radius-topleft:7px;
+	-webkit-border-top-left-radius:7px;
+	border-top-left-radius:7px;
+}
+.table table tr:first-child td:last-child {
+	-moz-border-radius-topright:7px;
+	-webkit-border-top-right-radius:7px;
+	border-top-right-radius:7px;
+}
+.table tr:last-child td:first-child{
+	-moz-border-radius-bottomleft:7px;
+	-webkit-border-bottom-left-radius:7px;
+	border-bottom-left-radius:7px;
+
+}
+.table tr:hover td{
+	background-color: #F7E8E8;
+
+
+}
+
+.table td{
+	vertical-align:middle;
+
+	background-color:#F7F7F7;
+
+	border:1px solid #0D0101;
+	border-width:0px 1px 1px 0px;
+	text-align:left;
+	padding:14px;
+	font-size:12px;
+	font-family:Arial;
+	font-weight:normal;
+	color: #030101;
+}
+.table tr:last-child td{
+	border-width:0px 1px 0px 0px;
+}
+.table tr td:last-child{
+	border-width:0px 0px 1px 0px;
+}
+.table tr:last-child td:last-child{
+	border-width:0px 0px 0px 0px;
+}
+.table tr:first-child td{
+		background:-o-linear-gradient(bottom, #FC6B51 5%, #FFFFFF 100%);
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #FC6B51), color-stop(1, #FFFFFF) );
+	background:-moz-linear-gradient( center top, #FC6B51 5%, #FFFFFF 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#FC6B51", endColorstr="#FFFFFF");
+   background: -o-linear-gradient(top,#FC6B51,#FFFFFF);
+
+	background-color:#FC6B51;
+	border:0px solid #0D0101;
+	text-align:center;
+	border-width:0px 0px 1px 1px;
+	font-size:16px;
+	font-family:Trebuchet MS;
+	font-weight:bold;
+	color: #080101;
+}
+.table tr:first-child:hover td{
+	background:-o-linear-gradient(bottom, #FC6B51 5%, #FFFFFF 100%);
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #FC6B51), color-stop(1, #FFFFFF) );
+	background:-moz-linear-gradient( center top, #FC6B51 5%, #FFFFFF 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#FC6B51", endColorstr="#FFFFFF");
+   background: -o-linear-gradient(top,#FC6B51,#FFFFFF);
+
+	background-color:#FC6B51;
+}
+.table tr:first-child td:first-child{
+	border-width:0px 0px 1px 0px;
+}
+.table tr:first-child td:last-child{
+	border-width:0px 0px 1px 1px;
+}
+</style>
+<script type="text/javascript">
+    var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    $(document).ready(function(){
+        $("#hidden").hide();
+        var user_type = document.getElementById("user_type").value;
+        var route = "/track_supplier_status/"
+        if(user_type == 'customer'){
+            route = "/track_order_status/"
+        }
+        $.ajax({
+            type: "GET",
+            url: $SCRIPT_ROOT + route,
+            contentType: "application/json; charset=utf-8",
+            success: function(data) {
+                $('#order_details').html(data.result);
+            }
+        });
+    });
+
+    function change_status(order_id, customer_id, recipe_id, supplier_id, count){
+        //alert("Order Id :" + order_id + " Customer Id:" + customer_id + " Recipe Id :" + recipe_id + " Supplier_id :" + supplier_id , "Count :" + count);
+        var sup_status = document.getElementById("status"+count).value;
+        $.ajax({
+            type: "GET",
+            url: $SCRIPT_ROOT + "/update_status/",
+            contentType: "application/json; charset=utf-8",
+            data : {
+                    "order_id" : order_id,
+                    "customer_id" : customer_id,
+                    "recipe_id" : recipe_id,
+                    "supplier_id" : supplier_id,
+                    "sup_status" : sup_status
+                    },
+            success: function(data) {
+                if(data.result == 'Success'){
+                    $('#sup_status'+count).html(sup_status);
+                }
+            }
+        });
+    }
+
+</script>
+<style>
+</style>
+<div class="box-contact">
+    {% if type == 'customer' %}
+        <h3>ORDER TRACKING</h3>
+    {% else %}
+        <h3>CUSTOMER ORDER TRACKING</h3>
+    {%endif%}
+    <fieldset>
+        <div id="order_details" class="table"></div>
+    </fieldset>
+</div>
+<div id="hidden"><input type="text" id="user_type" value="{{ type }}"></div>
+<footer>
+  <div class="main">
+
+    <div class="policy">Website designed by <a href="http://www.templatemonster.com" rel="nofollow">Food Techies</a> </div>
+    <div class="clear"></div>
+  </div>
+</footer>
+{% endblock %}
+</html>

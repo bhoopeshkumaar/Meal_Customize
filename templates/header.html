@@ -1,0 +1,119 @@
+<head>
+
+    <meta charset="utf-8">
+    <!--css-->
+    <link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="/static/css/grid.css" type="text/css" media="screen">
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+    <link href='http://fonts.googleapis.com/css?family=PT+Serif+Caption:400,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/static/css/flexslider.css" type="text/css" media="screen">
+    <!--js-->
+    <script type="text/javascript" src="/static/js/jquery-1.7.1.min.js" ></script>
+    <script type="text/javascript" src="/static/js/superfish.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.flexslider-min.js"></script>
+
+    <script>
+			jQuery(window).load(function() {								
+			jQuery('.flexslider').flexslider({
+				animation: "fade",			
+				slideshow: true,			
+				slideshowSpeed: 7000,
+				animationDuration: 600,
+				prevText: "",
+				nextText: "",
+				controlNav: false		
+			})
+
+      });
+	</script>
+
+    <style>
+        #dropdown
+        {
+            margin-top:-10px;
+            margin-left:730px;
+        }
+
+
+
+    </style>
+
+
+    <!--[if lt IE 8]>
+    <div style=' clear: both; text-align:center; position: relative;'>
+        <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+            <img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
+        </a>
+    </div>
+    <![endif]-->
+
+    <!--[if lt IE 9]>
+    <script src="/static/js/html5.js"></script>
+    <link rel="stylesheet" href="/static/css/ie.css">
+    <link href='http://fonts.googleapis.com/css?family=PT+Serif+Caption:400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=PT+Serif+Caption:400' rel='stylesheet' type='text/css'>
+    <![endif]-->
+</head>
+<body>
+
+<!--==============================header=================================-->
+<header>
+    <div class="line-top"></div>
+    <div class="main">
+
+        <div class="row-top">
+            <h1><a href="{{url_for('login_success_page')}}"><img alt="" src="/static/images/logo.png"height="100" width="250"></a></h1>
+            <div id="dropdown">
+            <p align="right">
+            <ul class="sf-menu">
+                {% if type == 'customer' %}
+                <li ><p align="right"><strong>Welcome, {{username}} !</strong></p>
+                    <ul>
+                            <li><a href="{{url_for('user_details')}}">Edit Profile</a></li>
+                            <li><a href="{{url_for('cart')}}">Your Cart</a></li>
+                            <li><a href="{{url_for('order_history')}}">Order History</a></li>
+                            <li><a href="{{url_for('track_order')}}">Track your order</a></li>
+                            <li><a href="{{url_for('logout')}}">Logout</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li ><p align="right"><strong>Welcome, {{username}} !</strong></p>
+                    <ul>
+                            <li><a href="{{url_for('user_details')}}">Edit Profile</a></li>
+                            <li><a href="{{url_for('supplier_recipe')}}">Your recipes</a></li>
+                            <li><a href="{{url_for('track_order')}}">Track customer order</a></li>
+                            <li><a href="{{url_for('logout')}}">Logout</a></li>
+                    </ul>
+                </li>
+                {%endif%}
+            </ul>
+            </p>
+            </div>
+            <nav>
+                <ul class="sf-menu">
+          {% if type == 'customer' %}
+          <li><a href="/login_success_page/">Home</a></li>
+          <li><a href="/quickmeal">Quick Meal</a></li>
+          </li>
+          <li><a href="/customize">Customize Meal</a> </li>
+          <li><a href="{{url_for('about')}}">About Us</a> </li>
+
+          <li><a href="{{url_for('feedback')}}">Feedback</a> </li>
+          {% else %}
+          <li><a href="/login_success_page/">Home</a></li>
+
+          <li><a href="{{url_for('about')}}">About Us</a> </li>
+
+          <li><a href="{{url_for('feedback')}}">Feedback</a> </li>
+          {% endif %}
+        </ul>
+            </nav>
+            <div class="clear"></div>
+        </div>
+    </div>
+</header>
+
+</body>
+{% block body %}{% endblock %}

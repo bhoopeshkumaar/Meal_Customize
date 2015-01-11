@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "header.html" %}
+{% block body %}
+<script>
+    function add(){
+        $("#msg").html("Feed back form submitted. We will be in touch with you soon.")
+    }
+</script>
+    <div class="border-horiz"></div>
+    <div class="main">
+        <h3><strong>Contact Information</strong></h3>
+        <div class="box-address">
+            <h4>Food Techies Inc.</h4>
+            <dl class="address">
+                <dt>College of Information Studies,<br>
+                    University of Maryland,<br>
+                    College park.</dt>
+            </dl>
+        </div>
+        <!--<div class="map box-img">
+            &lt;!&ndash;<iframe src="http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Brooklyn,+New+York,+NY,+United+States&amp;aq=0&amp;sll=37.0625,-95.677068&amp;sspn=61.282355,146.513672&amp;ie=UTF8&amp;hq=&amp;hnear=Brooklyn,+Kings,+New+York&amp;ll=40.649974,-73.950005&amp;spn=0.01628,0.025663&amp;z=14&amp;iwloc=A&amp;output=embed"> </iframe>&ndash;&gt;
+            <iframe src="http://www.google.com/maps/place/university+of+maryland+college+of+information+studies/@38.98833,-76.941753,15z/data=!4m2!3m1!1s0x0:0xe97482b424eafeec?sa=X&ei=59yHVOzjE8moNqrxg6AM&ved=0CHUQ_BIwDg"> </iframe>
+        </div>-->
+        <div class="map box-img">
+        <a href="http://www.google.com/maps/place/university+of+maryland+college+of+information+studies/@38.98833,-76.941753,15z/data=!4m2!3m1!1s0x0:0xe97482b424eafeec?sa=X&ei=59yHVOzjE8moNqrxg6AM&ved=0CHUQ_BIwDg">
+            <img alt='' height='230' width='620' src='/static/images/map.png'/></a>
+        </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="box-contact">
+        <h3>Feedback Form</h3>
+        <form id="contact-form">
+            <div class="success"> Feedback form submitted! <strong>We will be in touch soon.</strong> </div>
+            <fieldset>
+                <div class="coll-1">
+                    <div>
+                        <div class="form-txt">Your Name:</div>
+                        <label class="name">
+                            <input type="text" value="{{username}}">
+                            <span class="error">*This is not a valid name.</span> <span class="empty">*This field is required.</span> </label>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <div class="form-txt">Telephone:</div>
+                        <label class="phone">
+                            <input type="tel" value="{{phone}}">
+                            <span class="error">*This is not a valid phone number.</span> <span class="empty">*This field is required.</span> </label>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <div class="form-txt">Email:</div>
+                        <label class="email">
+                            <input type="email" value="{{email}}">
+                            <span class="error">*This is not a valid email address.</span> <span class="empty">*This field is required.</span> </label>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="coll-2">
+                    <div>
+                        <div class="form-txt">Message:</div>
+                        <label class="message">
+                            <textarea></textarea>
+                            <span class="error">*The message is too short.</span> <span class="empty">*This field is required.</span> </label>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="btns"> <a class="btn" data-type="submit" onclick="add()">Send</a> </div>
+                <div id="msg" align="center"></div>
+            </fieldset>
+        </form>
+    </div>
+</section>
+
+<!--==============================footer=================================-->
+
+</body>
+<footer>
+  <div class="main">
+
+    <div class="policy">Website designed by <a href="http://www.templatemonster.com" rel="nofollow">Food Techies</a> </div>
+    <div class="clear"></div>
+  </div>
+</footer>
+{% endblock %}
+</html>
